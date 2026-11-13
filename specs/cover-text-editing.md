@@ -28,5 +28,4 @@ El usuario da formato al Title y a la Date line de la Cover desde la pestaña Ti
 
 ## Open questions
 
-- El usuario aprueba el board de Penpot (barra y popover) para empezar la implementación.
-- El usuario confirma los seams de los tests: modelo `createCover`, conversión fracción ↔ pt, `ToolPanel` y cableado en `WorksheetView`.
+- Revisar en Chrome que la barra y el popover coinciden con el board de Penpot.
