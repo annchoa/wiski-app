@@ -25,7 +25,3 @@ El usuario da formato al Title y a la Date line de la Cover desde la pestaña Ti
 - **Valor tecleado**: fuera de rango, se ajusta al límite al pulsar Enter o salir del campo. Vacío o no numérico, vuelve al valor anterior.
 - **Caja al cambiar un valor**: el ancho y la esquina superior izquierda se quedan; el texto se reajusta y la vista mide la altura nueva. Si la altura pasa del borde inferior de la hoja, `y` sube hasta que quepa.
 - **Código**: `fontSize` pasa a `letterSize`. Se añaden `lineSpacing`, `letterSpacing`, `underline`, `strikethrough` y `alignment` (`'left' | 'center' | 'right'`) al modelo.
-
-## Open questions
-
-- Revisar en Chrome que la barra y el popover coinciden con el board de Penpot.
