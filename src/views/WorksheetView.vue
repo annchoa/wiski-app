@@ -51,8 +51,9 @@ import {
 	slotsInThumbnail,
 	slotsOnPage,
 } from '@/components/worksheet/templateSlots'
-import { createCover } from '@/lib/cover'
+import { createCover, type TextStyle } from '@/lib/cover'
 import { dateLine } from '@/lib/dateLine'
+import { letterSizeInPt } from '@/lib/letterSize'
 import { distributeInColumns } from '@/lib/masonry'
 import { getProduct, type Product, products } from '@/lib/products'
 import { readPhoto } from '@/lib/readPhoto'
@@ -86,6 +87,26 @@ const selectedCoverText = computed(() => {
 		? cover.value[selected]
 		: null
 })
+// The Tool panel shows these values dimmed while no text is selected.
+const selectedTextStyle = computed(() => {
+	const text = selectedCoverText.value
+	return {
+		letterSizePt: letterSizeInPt(
+			(text ?? cover.value.title ?? cover.value.dateLine)?.letterSize ?? 0,
+			worksheet.product.widthCm,
+		),
+		lineSpacing: text?.lineSpacing ?? 1.2,
+		letterSpacing: text?.letterSpacing ?? 0,
+		underline: text?.underline ?? false,
+		strikethrough: text?.strikethrough ?? false,
+		alignment: text?.alignment ?? 'center',
+	} satisfies TextStyle
+})
+// The Tool panel asks for a change only while a text is selected.
+function formatSelectedText(change: (id: 'title' | 'dateLine') => void) {
+	const { selected } = cover.value
+	if (selected === 'title' || selected === 'dateLine') change(selected)
+}
 // The browser history can move between products without remounting this view.
 watch(
 	() => props.productId,
@@ -373,9 +394,16 @@ function handleDrop({ active, over }: DnDEndEvent) {
           :color-scheme="cover.colorScheme"
           :typeface-name="selectedCoverText?.typeface ?? ''"
           :selected-text="selectedCoverText?.text ?? ''"
+          :text-style="selectedTextStyle"
           @select-color-scheme="cover.setColorScheme"
           @select-typeface="cover.setTypeface"
           @select-illustration="cover.addIllustration"
+          @set-letter-size="(pt) => formatSelectedText((id) => cover.setLetterSize(id, pt))"
+          @set-line-spacing="(multiple) => formatSelectedText((id) => cover.setLineSpacing(id, multiple))"
+          @set-letter-spacing="(value) => formatSelectedText((id) => cover.setLetterSpacing(id, value))"
+          @toggle-underline="formatSelectedText(cover.toggleUnderline)"
+          @toggle-strikethrough="formatSelectedText(cover.toggleStrikethrough)"
+          @cycle-alignment="formatSelectedText(cover.cycleAlignment)"
           @done="isEditingCover = false"
         />
 

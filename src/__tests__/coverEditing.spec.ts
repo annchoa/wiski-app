@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/vue'
+import { fireEvent, render, screen, within } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import { createMemoryHistory } from 'vue-router'
 import App from '../App.vue'
@@ -10,6 +10,13 @@ async function renderWorksheet() {
 	const router = createWikiRouter(createMemoryHistory())
 	await router.push('/worksheet/wiski-route')
 	render(App, { global: { plugins: [createWikiI18n(), router] } })
+}
+
+// The Typeface tiles repeat the words of the selected text.
+function inPreview() {
+	return within(
+		screen.getByRole('group', { name: 'Vista previa de la portada' }),
+	)
 }
 
 async function startCoverEditing() {
@@ -118,5 +125,52 @@ describe('Cover editing', () => {
 		await fireEvent.click(screen.getByRole('button', { name: 'Ilustración 2' }))
 
 		expect(screen.getAllByRole('img', picture)).toHaveLength(2)
+	})
+
+	it('formats the selected text from the toolbar, and the other text stays as it was', async () => {
+		await renderWorksheet()
+		await startCoverEditing()
+		const title = () => inPreview().getByText('Mi destino favorito')
+		await fireEvent.click(title())
+
+		await fireEvent.click(
+			screen.getByRole('button', { name: 'Aumentar tamaño de letra' }),
+		)
+		await fireEvent.click(screen.getByRole('button', { name: 'Subrayado' }))
+		await fireEvent.click(screen.getByRole('button', { name: 'Tachado' }))
+		await fireEvent.click(
+			screen.getByRole('button', { name: 'Alineación centrada' }),
+		)
+
+		expect(
+			screen.getByRole('textbox', { name: 'Tamaño de letra' }),
+		).toHaveValue('47')
+		expect(title()).toHaveStyle({
+			textDecoration: 'underline line-through',
+			textAlign: 'right',
+		})
+		expect(inPreview().getByText(dateLine(new Date(), 'es'))).toHaveStyle({
+			textDecoration: 'none',
+			textAlign: 'center',
+		})
+	})
+
+	it('spaces the lines and the letters of the selected text from the Spacing popover', async () => {
+		await renderWorksheet()
+		await startCoverEditing()
+		const title = () => inPreview().getByText('Mi destino favorito')
+		expect(title().style.lineHeight).toBe('1.2')
+		await fireEvent.click(title())
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Espaciado' }))
+		await fireEvent.click(
+			screen.getByRole('button', { name: 'Aumentar interlineado' }),
+		)
+		await fireEvent.click(
+			screen.getByRole('button', { name: 'Aumentar espaciado entre letras' }),
+		)
+
+		expect(title().style.lineHeight).toBe('1.3')
+		expect(title().style.letterSpacing).toBe('0.01em')
 	})
 })
