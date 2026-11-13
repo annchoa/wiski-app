@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { colorSchemes, defaultColorScheme } from '../lib/colorSchemes'
 import { createCover, illustrationElementId } from '../lib/cover'
 import { defaultIllustration, type Illustration } from '../lib/illustrations'
+import { letterSizeInPt } from '../lib/letterSize'
 import { defaultTypeface, typefaces } from '../lib/typefaces'
 
 function otherTypeface() {
@@ -108,6 +109,125 @@ describe('Cover model', () => {
 		expect(cover.dateLine?.typeface).toBe(defaultTypeface.name)
 	})
 
+	it('starts both texts with the same style', () => {
+		const cover = aCover()
+
+		for (const text of [cover.title, cover.dateLine]) {
+			expect(text).toMatchObject({
+				lineSpacing: 1.2,
+				letterSpacing: 0,
+				underline: false,
+				strikethrough: false,
+				alignment: 'center',
+			})
+		}
+	})
+
+	it('sets the Letter size in pt and keeps it between 8 and 150 pt', () => {
+		const cover = aCover()
+		const title = titleOf(cover)
+
+		cover.setLetterSize('title', 72)
+		expect(letterSizeInPt(title.letterSize, sheetWidthCm)).toBe(72)
+
+		cover.setLetterSize('title', 3)
+		expect(letterSizeInPt(title.letterSize, sheetWidthCm)).toBe(8)
+
+		cover.setLetterSize('title', 500)
+		expect(letterSizeInPt(title.letterSize, sheetWidthCm)).toBe(150)
+	})
+
+	it('changes the Letter size of one text only', () => {
+		const cover = aCover()
+		const { letterSize } = cover.dateLine ?? { letterSize: 0 }
+
+		cover.setLetterSize('title', 72)
+
+		expect(cover.dateLine?.letterSize).toBe(letterSize)
+	})
+
+	it('keeps the Line spacing between 0.8 and 2', () => {
+		const cover = aCover()
+		const title = titleOf(cover)
+
+		cover.setLineSpacing('title', 1.5)
+		expect(title.lineSpacing).toBe(1.5)
+
+		cover.setLineSpacing('title', 0.1)
+		expect(title.lineSpacing).toBe(0.8)
+
+		cover.setLineSpacing('title', 5)
+		expect(title.lineSpacing).toBe(2)
+		expect(cover.dateLine?.lineSpacing).toBe(1.2)
+	})
+
+	it('keeps the Letter spacing between -100 and 500', () => {
+		const cover = aCover()
+		const title = titleOf(cover)
+
+		cover.setLetterSpacing('title', 40)
+		expect(title.letterSpacing).toBe(40)
+
+		cover.setLetterSpacing('title', -900)
+		expect(title.letterSpacing).toBe(-100)
+
+		cover.setLetterSpacing('title', 900)
+		expect(title.letterSpacing).toBe(500)
+		expect(cover.dateLine?.letterSpacing).toBe(0)
+	})
+
+	it('toggles Underline and Strikethrough for one text', () => {
+		const cover = aCover()
+		const title = titleOf(cover)
+
+		cover.toggleUnderline('title')
+		cover.toggleStrikethrough('title')
+		expect(title.underline).toBe(true)
+		expect(title.strikethrough).toBe(true)
+		expect(cover.dateLine?.underline).toBe(false)
+
+		cover.toggleUnderline('title')
+		expect(title.underline).toBe(false)
+		expect(title.strikethrough).toBe(true)
+	})
+
+	it('cycles the Alignment: center, right, left, center', () => {
+		const cover = aCover()
+		const title = titleOf(cover)
+
+		cover.cycleAlignment('title')
+		expect(title.alignment).toBe('right')
+		cover.cycleAlignment('title')
+		expect(title.alignment).toBe('left')
+		cover.cycleAlignment('title')
+		expect(title.alignment).toBe('center')
+		expect(cover.dateLine?.alignment).toBe('center')
+	})
+
+	it('keeps the style when the Typeface or the Color scheme change', () => {
+		const cover = aCover()
+		const title = titleOf(cover)
+		cover.setLetterSize('title', 72)
+		cover.toggleUnderline('title')
+		cover.select('title')
+
+		cover.setTypeface(otherTypeface().name)
+		cover.setColorScheme(otherColorScheme())
+
+		expect(letterSizeInPt(title.letterSize, sheetWidthCm)).toBe(72)
+		expect(title.underline).toBe(true)
+	})
+
+	it('moves a text up when its new height passes the bottom of the sheet', () => {
+		const cover = aCover()
+		cover.setTextHeight('title', 0.1)
+		cover.moveTo('title', { x: 0.1, y: sheetHeight - 0.1 })
+
+		cover.setTextHeight('title', 0.3)
+
+		expect(titleOf(cover).y).toBeCloseTo(sheetHeight - 0.3)
+	})
+
 	it('keeps a moved text inside the sheet', () => {
 		const cover = aCover()
 		cover.setTextHeight('title', 0.1)
@@ -127,26 +247,38 @@ describe('Cover model', () => {
 	it('scales the letters of a text in proportion to its new width', () => {
 		const cover = aCover()
 		const title = titleOf(cover)
-		const { width, fontSize } = title
+		const { width, letterSize } = title
 
 		cover.scaleText('title', { x: 0.2, y: 0.1, width: width / 2 })
 
 		expect(title.width).toBeCloseTo(width / 2)
-		expect(title.fontSize).toBeCloseTo(fontSize / 2)
+		expect(title.letterSize).toBeCloseTo(letterSize / 2)
 		expect(title.x).toBe(0.2)
 		expect(title.y).toBe(0.1)
+	})
+
+	it('stops a corner Handle when the letters reach 8 pt', () => {
+		const cover = aCover()
+		const title = titleOf(cover)
+		const { width, letterSize } = title
+
+		cover.scaleText('title', { x: 0.2, y: 0.1, width: 0.11 })
+
+		expect(letterSizeInPt(title.letterSize, sheetWidthCm)).toBe(8)
+		// The letters and the box still grow together.
+		expect(title.width / title.letterSize).toBeCloseTo(width / letterSize)
 	})
 
 	it('changes the width of a text without changing its letters', () => {
 		const cover = aCover()
 		const title = titleOf(cover)
-		const { fontSize } = title
+		const { letterSize } = title
 
 		cover.resizeTextWidth('title', { x: 0.3, width: 0.4 })
 
 		expect(title.width).toBe(0.4)
 		expect(title.x).toBe(0.3)
-		expect(title.fontSize).toBe(fontSize)
+		expect(title.letterSize).toBe(letterSize)
 	})
 
 	it('stops a text at a minimum width and at the edge of the sheet', () => {

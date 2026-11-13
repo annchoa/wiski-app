@@ -8,6 +8,7 @@ import {
 import { computed, nextTick, ref, shallowReactive, useTemplateRef } from 'vue'
 import {
 	type CoverElementId,
+	type CoverText,
 	type createCover,
 	illustrationElementId,
 	illustrationKeyOf,
@@ -58,17 +59,28 @@ function boxStyle(box: { x: number; y: number; width: number }) {
 	}
 }
 
+function decorationOf(text: CoverText) {
+	const lines = []
+	if (text.underline) lines.push('underline')
+	if (text.strikethrough) lines.push('line-through')
+	return lines.length > 0 ? lines.join(' ') : 'none'
+}
+
 // Container query units: 1cqw is 1% of the sheet width, so letters scale with it.
 function textStyle(id: TextId) {
 	const text = props.cover[id]
 	if (!text) return {}
 	return {
 		...boxStyle(text),
-		fontSize: `${text.fontSize * 100}cqw`,
+		fontSize: `${text.letterSize * 100}cqw`,
 		fontFamily: `'${text.typeface}'`,
 		// The Title is bold in the design; the Date line is regular.
 		fontWeight: id === 'title' ? titleWeight(text.typeface) : 400,
 		color: props.cover.colorScheme.textColor,
+		lineHeight: text.lineSpacing,
+		letterSpacing: `${text.letterSpacing / 1000}em`,
+		textAlign: text.alignment,
+		textDecoration: decorationOf(text),
 	}
 }
 
@@ -241,7 +253,7 @@ function onKeydown(event: KeyboardEvent) {
           v-model="draft"
           :aria-label="$t('editor.cover.editText')"
           :style="textStyle(id)"
-          class="absolute resize-none overflow-hidden bg-transparent text-center leading-tight outline-none"
+          class="absolute resize-none overflow-hidden bg-transparent outline-none"
           rows="1"
           @click.stop
           @blur="finishEditing"
@@ -251,7 +263,7 @@ function onKeydown(event: KeyboardEvent) {
           v-else
           :ref="(element) => rememberTextElement(id, element)"
           :style="textStyle(id)"
-          class="absolute cursor-move text-center leading-tight whitespace-pre-wrap"
+          class="absolute cursor-move whitespace-pre-wrap"
           @pointerdown.prevent="startGesture(id, null, $event)"
           @click.stop="select(id)"
           @dblclick.stop="startEditing(id)"

@@ -2,6 +2,11 @@ import { reactive } from 'vue'
 import { type ColorScheme, defaultColorScheme } from './colorSchemes'
 import type { Point } from './geometry'
 import { defaultIllustration, type Illustration } from './illustrations'
+import {
+	letterSizeFromPt,
+	maxLetterSizePt,
+	minLetterSizePt,
+} from './letterSize'
 import { cmPerInch, lowResolutionBelow } from './resolution'
 import { defaultTypeface } from './typefaces'
 
@@ -25,6 +30,18 @@ function fraction(designPx: number) {
 	return designPx / designSheetPx
 }
 
+export type Alignment = 'left' | 'center' | 'right'
+
+// What the Tool panel shows of the selected text, with the Letter size in pt.
+export interface TextStyle {
+	letterSizePt: number
+	lineSpacing: number
+	letterSpacing: number
+	underline: boolean
+	strikethrough: boolean
+	alignment: Alignment
+}
+
 export interface CoverText {
 	text: string
 	typeface: string
@@ -33,7 +50,14 @@ export interface CoverText {
 	width: number
 	// The browser decides the height, so the view reports it.
 	height: number
-	fontSize: number
+	letterSize: number
+	// A multiple of the Letter size.
+	lineSpacing: number
+	// Thousandths of an em.
+	letterSpacing: number
+	underline: boolean
+	strikethrough: boolean
+	alignment: Alignment
 }
 
 export interface CoverIllustration {
@@ -46,6 +70,14 @@ export interface CoverIllustration {
 	height: number
 	// The widest the Illustration can be, as a fraction of the sheet width.
 	maxWidth: number
+}
+
+const startStyle = {
+	lineSpacing: 1.2,
+	letterSpacing: 0,
+	underline: false,
+	strikethrough: false,
+	alignment: 'center' as Alignment,
 }
 
 // The narrowest an element can be, as a fraction of the sheet width.
@@ -117,6 +149,14 @@ export function createCover(initial: {
 		illustration.y = clamp(box.y, 0, initial.sheetHeight - illustration.height)
 	}
 
+	function clampLetterSize(fraction: number) {
+		return clamp(
+			fraction,
+			letterSizeFromPt(minLetterSizePt, initial.sheetWidthCm),
+			letterSizeFromPt(maxLetterSizePt, initial.sheetWidthCm),
+		)
+	}
+
 	function elementOf(id: CoverElementId) {
 		if (id === 'title' || id === 'dateLine') return cover[id]
 		return cover.illustrations.find(
@@ -132,7 +172,8 @@ export function createCover(initial: {
 			y: fraction(44),
 			width: fraction(444),
 			height: fraction(53),
-			fontSize: fraction(44),
+			letterSize: fraction(44),
+			...startStyle,
 		} as CoverText | null,
 		dateLine: {
 			text: initial.dateLine,
@@ -141,7 +182,8 @@ export function createCover(initial: {
 			y: fraction(148),
 			width: fraction(444),
 			height: fraction(24),
-			fontSize: fraction(20),
+			letterSize: fraction(20),
+			...startStyle,
 		} as CoverText | null,
 		illustrations: [
 			newIllustration(
@@ -190,6 +232,42 @@ export function createCover(initial: {
 			cover.selected = illustrationElementId(added.key)
 		},
 
+		setLetterSize(id: 'title' | 'dateLine', pt: number) {
+			const text = cover[id]
+			if (!text) return
+			text.letterSize = clampLetterSize(
+				letterSizeFromPt(pt, initial.sheetWidthCm),
+			)
+		},
+
+		setLineSpacing(id: 'title' | 'dateLine', multiple: number) {
+			const text = cover[id]
+			if (text) text.lineSpacing = clamp(multiple, 0.8, 2)
+		},
+
+		setLetterSpacing(id: 'title' | 'dateLine', thousandthsOfEm: number) {
+			const text = cover[id]
+			if (text) text.letterSpacing = clamp(thousandthsOfEm, -100, 500)
+		},
+
+		toggleUnderline(id: 'title' | 'dateLine') {
+			const text = cover[id]
+			if (text) text.underline = !text.underline
+		},
+
+		toggleStrikethrough(id: 'title' | 'dateLine') {
+			const text = cover[id]
+			if (text) text.strikethrough = !text.strikethrough
+		},
+
+		// Left, center, right and left again, as the icons read.
+		cycleAlignment(id: 'title' | 'dateLine') {
+			const text = cover[id]
+			if (!text) return
+			const next = { left: 'center', center: 'right', right: 'left' } as const
+			text.alignment = next[text.alignment]
+		},
+
 		setText(id: 'title' | 'dateLine', text: string) {
 			// An empty text would collapse to no height and could not be selected again.
 			const element = cover[id]
@@ -198,7 +276,9 @@ export function createCover(initial: {
 
 		setTextHeight(id: 'title' | 'dateLine', height: number) {
 			const text = cover[id]
-			if (text) text.height = height
+			if (!text) return
+			text.height = height
+			text.y = clamp(text.y, 0, initial.sheetHeight - height)
 		},
 
 		moveTo(id: CoverElementId, position: Point) {
@@ -232,9 +312,14 @@ export function createCover(initial: {
 		) {
 			const text = cover[id]
 			if (!text) return
-			const width = clamp(box.width, minWidth, 1)
-			const ratio = width / text.width
-			text.fontSize *= ratio
+			const wanted = clamp(box.width, minWidth, 1)
+			const letterSize = clampLetterSize(
+				text.letterSize * (wanted / text.width),
+			)
+			// The box stops with the letters.
+			const ratio = letterSize / text.letterSize
+			const width = text.width * ratio
+			text.letterSize = letterSize
 			text.height *= ratio
 			text.width = width
 			text.x = clamp(box.x, 0, 1 - width)
