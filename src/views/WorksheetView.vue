@@ -41,6 +41,7 @@ import { useRouter } from 'vue-router'
 import logoSecondary from '@/assets/logo-secondary.png'
 import CoverPreview from '@/components/cover/CoverPreview.vue'
 import ToolPanel from '@/components/cover/ToolPanel.vue'
+import LanguageSelector from '@/components/LanguageSelector.vue'
 import AssetPanelPhoto from '@/components/worksheet/AssetPanelPhoto.vue'
 import DropArea from '@/components/worksheet/DropArea.vue'
 import PanelOverlay from '@/components/worksheet/PanelOverlay.vue'
@@ -81,6 +82,12 @@ function newCover() {
 	})
 }
 const cover = ref(newCover())
+watch(locale, () => {
+	cover.value.translateTexts({
+		title: t('editor.cover.defaultTitle'),
+		dateLine: dateLine(new Date(), locale.value),
+	})
+})
 const isEditingCover = ref(false)
 const selectedCoverText = computed(() => {
 	const { selected } = cover.value
@@ -312,6 +319,8 @@ function handleDrop({ active, over }: DnDEndEvent) {
           @previous="worksheet.previousPage()"
           @next="worksheet.nextPage()"
         />
+        <!-- 19 px from the top, like the page arrows; 20 px from the right edge. -->
+        <LanguageSelector class="mt-[19px] -mr-1 ml-auto self-start" />
       </header>
 
       <div class="flex min-h-0 flex-1">
