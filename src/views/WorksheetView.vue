@@ -443,7 +443,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
             </div>
 
             <div
-              class="absolute top-1/2 right-full mr-3.5 flex -translate-y-1/2 flex-col items-center gap-2 rounded-lg border border-neutral-200 bg-white p-2 shadow-[0_2px_8px_rgba(0,0,0,0.12)]"
+              class="absolute top-1/2 right-full mr-3.5 flex -translate-y-1/2 flex-col items-center gap-2 border border-neutral-200 bg-white p-2 shadow-[0_2px_8px_rgba(0,0,0,0.12)]"
             >
               <div role="group" :aria-label="$t('editor.margins.label')" class="flex gap-1">
                 <button
@@ -453,7 +453,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
                   :aria-label="$t(`editor.margins.${margins}`)"
                   :title="$t(`editor.margins.${margins}`)"
                   :aria-pressed="margins === currentMargins"
-                  class="flex size-8 items-center justify-center rounded-lg border border-neutral-200 bg-white aria-pressed:border-neutral-900 aria-pressed:bg-neutral-900 aria-pressed:text-white"
+                  class="flex size-8 items-center justify-center border border-neutral-200 bg-white aria-pressed:border-neutral-900 aria-pressed:bg-neutral-900 aria-pressed:text-white"
                   @click="worksheet.changeMargins(worksheet.currentPage, margins)"
                 >
                   <component :is="marginsIcons[margins]" aria-hidden="true" class="size-4" />
@@ -469,7 +469,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
                   :aria-checked="template.id === currentTemplateId"
                   :aria-label="$t(`editor.templates.${template.id}`)"
                   :title="$t(`editor.templates.${template.id}`)"
-                  class="h-[34px] overflow-hidden rounded-md border border-neutral-200 bg-white aria-checked:border-2 aria-checked:border-neutral-900"
+                  class="h-[34px] overflow-hidden border border-neutral-200 bg-white aria-checked:border-2 aria-checked:border-neutral-900"
                   :style="{ aspectRatio: `${worksheet.product.widthCm} / ${worksheet.product.heightCm}` }"
                   @click="worksheet.changeTemplate(worksheet.currentPage, template.id)"
                 >
@@ -477,7 +477,6 @@ function handleDrop({ active, over }: DnDEndEvent) {
                     <span
                       v-for="slot in template.slotCount"
                       :key="slot"
-                      class="rounded-[1px]"
                       :class="currentMargins === 'full-bleed' ? fullBleedThumbnailTones[slot - 1] : 'bg-neutral-300'"
                     />
                   </span>
