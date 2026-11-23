@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
+import LanguageSelector from '@/components/LanguageSelector.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { applyDiscount } from '@/lib/pricing'
 import { products } from '@/lib/products'
 
-const { locale } = useI18n()
 const year = new Date().getFullYear()
 </script>
 
@@ -17,10 +15,7 @@ const year = new Date().getFullYear()
     <header class="border-b">
       <div class="mx-auto flex h-14 w-full max-w-[1248px] items-center justify-between px-6">
         <span class="text-xl font-bold">wiski</span>
-        <NativeSelect v-model="locale" :aria-label="$t('language.label')">
-          <NativeSelectOption value="es">ES</NativeSelectOption>
-          <NativeSelectOption value="en">EN</NativeSelectOption>
-        </NativeSelect>
+        <LanguageSelector />
       </div>
     </header>
 
