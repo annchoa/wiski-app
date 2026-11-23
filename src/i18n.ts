@@ -10,6 +10,7 @@ const messages = {
 			heading: 'Crea tu fotolibro',
 			subheading: 'Elige el formato que mejor cuenta tu historia.',
 			create: 'Crear {name}',
+			logo: 'Wiski',
 		},
 		editor: {
 			uploadHint: 'Sube aquí tus fotos',
@@ -131,6 +132,7 @@ const messages = {
 			heading: 'Create your photobook',
 			subheading: 'Choose the format that best tells your story.',
 			create: 'Create {name}',
+			logo: 'Wiski',
 		},
 		editor: {
 			uploadHint: 'Upload your photos here',

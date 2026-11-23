@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import logoSecondary from '@/assets/logo-secondary.png'
 import LanguageSelector from '@/components/LanguageSelector.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -8,20 +9,23 @@ import { applyDiscount } from '@/lib/pricing'
 import { products } from '@/lib/products'
 
 const year = new Date().getFullYear()
+const landingUrl = 'https://annchoa.github.io/wiski-landing/'
 </script>
 
 <template>
   <div class="flex min-h-screen flex-col bg-background text-foreground">
-    <header class="border-b">
-      <div class="mx-auto flex h-14 w-full max-w-[1248px] items-center justify-between px-6">
-        <span class="text-xl font-bold">wiski</span>
+    <header class="bg-primary">
+      <div class="mx-auto flex h-22 w-full max-w-[1248px] items-center justify-between px-6">
+        <a :href="landingUrl">
+          <img :src="logoSecondary" :alt="$t('home.logo')" class="h-7 w-[94px]" />
+        </a>
         <LanguageSelector />
       </div>
     </header>
 
     <main class="mx-auto flex w-full max-w-[1248px] flex-1 flex-col items-center gap-6 px-6 py-8">
       <div class="flex flex-col items-center gap-2 text-center">
-        <h1 class="text-[40px] leading-tight font-bold tracking-tight">{{ $t('home.heading') }}</h1>
+        <h1 class="text-[40px] leading-tight font-bold tracking-tight text-primary">{{ $t('home.heading') }}</h1>
         <p class="text-lg text-muted-foreground">{{ $t('home.subheading') }}</p>
       </div>
 
@@ -73,8 +77,8 @@ const year = new Date().getFullYear()
       </div>
     </main>
 
-    <footer class="border-t">
-      <div class="mx-auto flex h-12 w-full max-w-[1248px] items-center px-6 text-sm text-muted-foreground">
+    <footer class="bg-secondary text-secondary-foreground">
+      <div class="mx-auto flex h-12 w-full max-w-[1248px] items-center px-6 text-sm">
         © {{ year }} wiski
       </div>
     </footer>
