@@ -27,6 +27,8 @@ Use `@phosphor-icons/vue` in the regular weight (the default). Phosphor has no v
 
 Styling has no tests: compare the running UI against Penpot. With `make up` running, capture it with `google-chrome --headless=new --no-sandbox --window-size=1440,1200 --virtual-time-budget=10000 --screenshot=<file> http://localhost:5173/` and read the PNG next to `export_shape` of the board. The time budget lets web fonts load; the Vue devtools badge at the bottom is dev-only.
 
+- A Penpot `Spacer` between flex children adds its width to the `gap` on both sides. In Tailwind, use margin = spacer width + one `gap` (spacer 40 + `gap-6` → `mr-16`). Compare each child's `parentX` in Penpot with the DOM `x`: a screenshot hides a 24 px error.
+
 Screenshots cannot show drags, hover states or the file picker. [scripts/](scripts/) drives the headless Chrome over CDP from the host's Node (≥ 22, built-in `WebSocket`): `cdp.mjs` launches it and presses, moves and drops the mouse, `fixtures.mjs` uploads test photos, and `drag-to-trash.mjs` is a runnable example (`node scripts/drag-to-trash.mjs`, with `make up` running). Detect the file picker with `Page.setInterceptFileChooserDialog` through `browser.send`.
 
 After `bun add` or `bun remove`, Vite re-optimizes on the first page load and reloads it mid-script: open the page once and wait before running a script, or its first query returns `undefined`. A failed script leaves its Chrome running on port 9333: close it with `pkill -f "[w]iski-cdp-profile"` (the brackets stop `pkill` from matching its own shell).
