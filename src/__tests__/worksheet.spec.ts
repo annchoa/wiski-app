@@ -34,6 +34,17 @@ async function renderWorksheet(path: string) {
 }
 
 describe('Worksheet screen', () => {
+	it('shows the Wiski logo in the top bar before the product selector', async () => {
+		await renderWorksheet('/worksheet/wiski-moment')
+
+		const logo = screen.getByRole('img', { name: 'Wiski' })
+		const selector = screen.getByRole('button', { name: /Wiski Momento/ })
+
+		expect(
+			logo.compareDocumentPosition(selector) & Node.DOCUMENT_POSITION_FOLLOWING,
+		).toBeTruthy()
+	})
+
 	it('opens on the first page of the chosen product', async () => {
 		await renderWorksheet('/worksheet/wiski-moment')
 

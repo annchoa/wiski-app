@@ -38,6 +38,7 @@ import {
 } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import logoSecondary from '@/assets/logo-secondary.png'
 import CoverPreview from '@/components/cover/CoverPreview.vue'
 import ToolPanel from '@/components/cover/ToolPanel.vue'
 import AssetPanelPhoto from '@/components/worksheet/AssetPanelPhoto.vue'
@@ -257,6 +258,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
   <DnDProvider :modifiers="[snapCenterToCursor]">
     <div class="flex h-screen flex-col overflow-hidden bg-white text-neutral-950">
       <header class="flex h-[88px] shrink-0 items-center gap-6 border-b border-neutral-200 bg-primary px-6">
+        <img :src="logoSecondary" :alt="$t('editor.logo')" class="h-7 w-[94px] shrink-0 mr-16" />
         <div ref="productSelectorElement" class="relative w-[200px] shrink-0" @keydown.esc="isProductMenuOpen = false">
           <button
             type="button"

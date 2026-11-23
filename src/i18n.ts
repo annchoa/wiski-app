@@ -79,6 +79,7 @@ const messages = {
 				horizontal: 'Horizontales primero',
 			},
 			worksheet: 'Hoja de trabajo',
+			logo: 'Wiski',
 			lowResolution: 'Baja resolución: {ppp} ppp',
 			slotEditing: {
 				zoomOut: 'Alejar',
@@ -196,6 +197,7 @@ const messages = {
 			photos: 'Photos',
 			sort: { vertical: 'Vertical first', horizontal: 'Horizontal first' },
 			worksheet: 'Worksheet',
+			logo: 'Wiski',
 			lowResolution: 'Low resolution: {ppp} ppp',
 			slotEditing: {
 				zoomOut: 'Zoom out',
