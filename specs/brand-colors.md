@@ -53,11 +53,11 @@ No cambia:
 - [x] `main.css` define los cuatro tokens con los valores de la tabla.
 - [x] La barra superior usa Secondary al 100 %.
 - [x] La barra superior muestra el logo secondary a la izquierda del selector de producto.
-- [ ] Los links de texto usan el 80 % y pasan a 100 % con hover (cuando exista el footer).
-- [ ] Los botones primarios, el estado seleccionado y el foco usan Primary, con su hover y su active.
+- [x] Los links de texto usan el 80 % y pasan a 100 % con hover (cuando exista el footer).
+- [x] Los botones primarios, el estado seleccionado y el foco usan Primary, con su hover y su active.
 - [x] El proyecto `wiski` de Penpot tiene ocho estilos de color en la carpeta `brand` (2026-11-13): `primary`, `-hover`, `-active`, `-foreground` y los mismos de `secondary`. Penpot no calcula `color-mix`: hover y active son hex aproximados sobre blanco.
 - [x] `Design ready` (2026-11-23): el usuario aprobó el diseño de `Worksheet / brand` y de la Cover (frame `Worksheet / Cover / brand top bar`).
-- [ ] La interfaz en Chrome coincide con Penpot (ver «Visual check» en `CLAUDE.md`), incluidos el hover y el active reales.
+- [x] La interfaz en Chrome coincide con Penpot (ver «Visual check» en `CLAUDE.md`), incluidos el hover y el active reales.
 
 ## Estado del diseño (2026-11-23)
 
