@@ -86,8 +86,12 @@ The panel of Cover editing that takes the place of the Asset panel. It has a fix
 _Avoid_: Toolbar, sidebar
 
 **Tool menu**:
-The row of three text items at the top of the Tool panel: Colores, Tipografías and Ilustraciones. Each item shows its list. It opens on Colores. Selecting a text or an Illustration on the Cover opens the matching list; clearing the selection keeps the list.
+The row of four text items at the top of the Tool panel: Plantillas, Colores, Tipografías and Ilustraciones. Each item shows its list. It opens on Plantillas. Selecting a text or an Illustration on the Cover opens the matching list; clearing the selection keeps the list.
 _Avoid_: Tabs, toolbar
+
+**Text template**:
+A predefined combination of Typefaces and text boxes for the Title and the Date line of the Cover, the same for every Product. The user drags one from the Plantillas list of the Tool menu to the Cover preview and chooses where it lands. It does not change the words, the Illustrations or the Color scheme. It is not a Template, which is a set of Slots on a Page.
+_Avoid_: Layout, preset
 
 **Cover preview**:
 The front of the Cover as the user sees it during Cover editing, in the proportion of the Product. It is always full bleed.
