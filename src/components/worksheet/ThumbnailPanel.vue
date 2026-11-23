@@ -52,7 +52,7 @@ watch(
       :aria-label="$t('editor.previousPage')"
       :title="$t('editor.previousPage')"
       :disabled="current === 0"
-      class="mt-2.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-neutral-200 bg-white disabled:opacity-40"
+      class="mt-2.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-neutral-200 bg-secondary disabled:opacity-40"
       @click="$emit('previous')"
     >
       <PhCaretLeft aria-hidden="true" class="size-4" />
@@ -77,7 +77,7 @@ watch(
               <img v-if="photo" :src="photo.url" alt="" class="h-full w-full object-cover" :style="photoStyle({ page: index, slot })" draggable="false" />
             </span>
           </span>
-          <span aria-hidden="true" class="text-[11px]" :class="index === current ? 'font-semibold text-neutral-950' : 'font-medium text-neutral-500'">{{ index + 1 }}</span>
+          <span aria-hidden="true" class="text-[11px]" :class="'font-medium text-secondary'">{{ index + 1 }}</span>
         </button>
       </li>
     </ol>
@@ -87,7 +87,7 @@ watch(
       :aria-label="$t('editor.nextPage')"
       :title="$t('editor.nextPage')"
       :disabled="current === pages.length - 1"
-      class="mt-2.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-neutral-200 bg-white disabled:opacity-40"
+      class="mt-2.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-neutral-200 bg-secondary disabled:opacity-40"
       @click="$emit('next')"
     >
       <PhCaretRight aria-hidden="true" class="size-4" />

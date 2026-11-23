@@ -256,21 +256,21 @@ function handleDrop({ active, over }: DnDEndEvent) {
 <template>
   <DnDProvider :modifiers="[snapCenterToCursor]">
     <div class="flex h-screen flex-col overflow-hidden bg-white text-neutral-950">
-      <header class="flex h-[88px] shrink-0 items-center gap-6 border-b border-neutral-200 px-6">
+      <header class="flex h-[88px] shrink-0 items-center gap-6 border-b border-neutral-200 bg-primary px-6">
         <div ref="productSelectorElement" class="relative w-[200px] shrink-0" @keydown.esc="isProductMenuOpen = false">
           <button
             type="button"
             aria-haspopup="menu"
             :aria-expanded="isProductMenuOpen"
-            class="flex h-10 w-full items-center gap-2 rounded-lg border border-neutral-200 bg-white px-2.5 text-sm font-semibold"
+            class="flex h-10 w-full items-center gap-2 rounded-lg border border-neutral-200 bg-secondary px-2.5 text-sm font-semibold text-primary hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_5%)] active:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_10%)]"
             @click="isProductMenuOpen = !isProductMenuOpen"
           >
             {{ $t(`products.${worksheet.product.id}.name`) }}
-            <span class="flex items-center gap-1 text-xs font-medium text-neutral-500">
+            <span class="flex items-center gap-1 text-xs font-medium text-primary">
               <PhBookOpen aria-hidden="true" class="size-3" />
               {{ worksheet.product.pages }}
             </span>
-            <PhCaretDown aria-hidden="true" class="ml-auto size-4" />
+            <PhCaretDown aria-hidden="true" class="ml-auto size-4 text-secondary-foreground" />
           </button>
           <ul
             v-if="isProductMenuOpen"
@@ -319,7 +319,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
           :target="{ kind: 'asset-panel' }"
           :external="{ files: 'image/*' }"
           :overlay="PanelOverlay"
-          class="flex w-[408px] shrink-0 flex-col border-r border-neutral-200 bg-white data-[over=true]:bg-neutral-50"
+          class="flex w-[408px] shrink-0 flex-col border-r border-neutral-200 bg-white outline-none data-[over=true]:bg-neutral-50"
           @drop="handleDrop"
         >
           <div class="flex h-14 shrink-0 items-center gap-2 px-4">
@@ -328,7 +328,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
               :aria-label="$t('editor.sort.vertical')"
               :title="$t('editor.sort.vertical')"
               :aria-pressed="worksheet.sort === 'vertical'"
-              class="flex size-8 items-center justify-center rounded-lg border border-neutral-200 bg-white aria-pressed:border-neutral-900 aria-pressed:bg-neutral-900 aria-pressed:text-white"
+              class="flex size-8 items-center justify-center rounded-lg border border-neutral-200 bg-secondary hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_5%)] active:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_10%)] aria-pressed:border-neutral-900 aria-pressed:bg-neutral-900 aria-pressed:text-white"
               @click="worksheet.toggleSort('vertical')"
             >
               <PhRectangle aria-hidden="true" class="size-4 rotate-90" />
@@ -338,7 +338,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
               :aria-label="$t('editor.sort.horizontal')"
               :title="$t('editor.sort.horizontal')"
               :aria-pressed="worksheet.sort === 'horizontal'"
-              class="flex size-8 items-center justify-center rounded-lg border border-neutral-200 bg-white aria-pressed:border-neutral-900 aria-pressed:bg-neutral-900 aria-pressed:text-white"
+              class="flex size-8 items-center justify-center rounded-lg border border-neutral-200 bg-secondary hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_5%)] active:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_10%)] aria-pressed:border-neutral-900 aria-pressed:bg-neutral-900 aria-pressed:text-white"
               @click="worksheet.toggleSort('horizontal')"
             >
               <PhRectangle aria-hidden="true" class="size-4" />
@@ -368,7 +368,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
               :target="{ kind: 'trash' }"
               :overlay="TrashOverlay"
               :title="$t('editor.trash')"
-              class="absolute bottom-[26px] left-[298px] flex size-[76px] items-center justify-center rounded-full border border-neutral-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] data-[over=true]:border-neutral-900 data-[over=true]:bg-neutral-900 data-[over=true]:text-white"
+              class="absolute bottom-[26px] left-[298px] flex size-[76px] items-center justify-center rounded-full border border-neutral-200 bg-secondary shadow-[0_2px_8px_rgba(0,0,0,0.12)] data-[over=true]:border-neutral-900 data-[over=true]:bg-neutral-900 data-[over=true]:text-white"
               @drop="handleDrop"
             >
               <PhTrash aria-hidden="true" class="size-9" />
@@ -379,7 +379,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
           <div class="shrink-0 p-4">
             <label
               :title="$t('editor.upload')"
-              class="flex h-10 cursor-pointer items-center justify-center rounded-lg border border-dashed border-neutral-400 bg-white has-focus-visible:ring-2 has-focus-visible:ring-neutral-900"
+              class="flex h-10 cursor-pointer items-center justify-center rounded-lg border border-dashed border-neutral-400 bg-secondary hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_5%)] active:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_10%)] has-focus-visible:ring-2 has-focus-visible:ring-neutral-900"
             >
               <PhUploadSimple aria-hidden="true" class="size-4" />
               <span class="sr-only">{{ $t('editor.upload') }}</span>
@@ -485,7 +485,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
               type="button"
               :aria-label="$t('editor.pay')"
               :title="$t('editor.pay')"
-              class="flex size-20 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-transform hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+              class="flex size-20 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-transform hover:scale-105 hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_5%)] active:scale-95 active:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_10%)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <PhCreditCard aria-hidden="true" class="size-10" />
             </button>
@@ -494,7 +494,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
               :aria-label="$t('editor.editCover')"
               :title="$t('editor.editCover')"
               :aria-pressed="isEditingCover"
-              class="flex size-14 items-center justify-center rounded-full border border-border bg-background text-primary shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-transform hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none aria-pressed:border-2 aria-pressed:border-neutral-950"
+              class="flex size-14 items-center justify-center rounded-full border border-border bg-secondary text-secondary-foreground shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-transform hover:scale-105 hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_5%)] active:scale-95 active:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_10%)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground aria-pressed:hover:bg-[color-mix(in_oklab,var(--primary)_80%,transparent)] aria-pressed:active:bg-[color-mix(in_oklab,var(--primary)_65%,transparent)]"
               @click="isEditingCover = !isEditingCover"
             >
               <PhBook aria-hidden="true" class="size-7" />
@@ -504,7 +504,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
               :aria-label="$t('editor.previewPdf')"
               :title="$t('editor.previewPdf')"
               @click="isPdfPreviewOpen = true"
-              class="flex size-14 items-center justify-center rounded-full border border-border bg-background text-primary shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-transform hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+              class="flex size-14 items-center justify-center rounded-full border border-border bg-secondary text-secondary-foreground shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-transform hover:scale-105 hover:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_5%)] active:scale-95 active:bg-[color-mix(in_oklab,var(--secondary),var(--foreground)_10%)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <PhEye aria-hidden="true" class="size-8" />
             </button>

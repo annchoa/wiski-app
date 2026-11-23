@@ -166,7 +166,7 @@ function isCurrentColorScheme(candidate: ColorScheme) {
         type="button"
         role="tab"
         :aria-selected="list === item"
-        class="border-b-2 border-transparent px-3 text-sm text-neutral-500 aria-selected:border-neutral-950 aria-selected:font-semibold aria-selected:text-neutral-950"
+        class="border-b-2 border-transparent px-3 text-sm text-neutral-500 aria-selected:border-primary aria-selected:font-semibold aria-selected:text-primary"
         @click="list = item"
       >
         {{ $t(`editor.cover.${item}`) }}
@@ -305,7 +305,7 @@ function isCurrentColorScheme(candidate: ColorScheme) {
     <div class="flex h-[72px] shrink-0 items-center px-4">
       <button
         type="button"
-        class="h-10 w-full rounded-lg bg-neutral-950 text-sm font-semibold text-neutral-50"
+        class="h-10 w-full rounded-lg bg-primary text-sm font-semibold text-primary-foreground hover:bg-[color-mix(in_oklab,var(--primary)_80%,transparent)] active:bg-[color-mix(in_oklab,var(--primary)_65%,transparent)]"
         @click="$emit('done')"
       >
         {{ $t('editor.cover.done') }}
