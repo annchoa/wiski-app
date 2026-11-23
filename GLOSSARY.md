@@ -140,3 +140,7 @@ A line under the letters of a text of the Cover, or through them. Each one is on
 **Alignment**:
 How the lines of a text of the Cover sit in its box: left, center or right.
 _Avoid_: Justification
+
+**Language selector**:
+The control at the right end of the top bar that switches the language of the interface between Spanish and English. It shows the code of the current language: ES or EN. It looks the same on the Home and in the editor. In the editor it stays in the same place with and without Cover editing.
+_Avoid_: Language switch, language picker

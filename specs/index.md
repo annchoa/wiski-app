@@ -8,3 +8,4 @@
 | [cover-text-editing](cover-text-editing.md) | done | ✅ | ✅ | Implementado el 2026-11-13 con 224 tests en verde. El usuario revisó la barra y el popover en Chrome contra Penpot. |
 | [illustrations](illustrations.md) | pending | ❌️ | ❌️ | Hechos: skill `add-illustration`, créditos en JSON y tamaño máximo de impresión de las PNG. Faltan revisar la flor y la de Arl en el navegador, y el footer de créditos (sin diseño). |
 | [text-templates](text-templates.md) | pending | ❌️ | ❌️ | Comportamiento decidido el 2026-11-13 y escrito en el spec, a la espera de que el usuario lo confirme. Falta convertir 7 templates a tarjetas y rehacer el tablero de Penpot. |
+| [language-selector](language-selector.md) | pending | ✅ | ❌️ | `Design ready` el 2026-11-23 (`Worksheet / brand ejemplo logo` y `Worksheet / Cover / brand top bar`). Spec escrito, a la espera de que el usuario lo confirme. Falta implementarlo. |
