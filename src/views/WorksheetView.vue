@@ -307,7 +307,7 @@ function handleDrop({ active, over }: DnDEndEvent) {
           </ul>
         </div>
 
-        <div aria-hidden="true" class="w-[200px] shrink-0" />
+        <div aria-hidden="true" class="w-[70px] shrink-0" />
         <ThumbnailPanel
           v-if="!isEditingCover"
           class="max-w-[816px] flex-1"
