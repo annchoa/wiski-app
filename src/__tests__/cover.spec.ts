@@ -447,3 +447,30 @@ describe('Cover model', () => {
 		expect(cover.illustrations).toEqual([])
 	})
 })
+
+describe('Cover texts when the language changes', () => {
+	it('gives the new words to a text the user has not edited', () => {
+		const cover = aCover()
+
+		cover.translateTexts({
+			title: 'My favorite destination',
+			dateLine: 'November 2026',
+		})
+
+		expect(cover.title?.text).toBe('My favorite destination')
+		expect(cover.dateLine?.text).toBe('November 2026')
+	})
+
+	it('keeps the words of an edited text and translates the other one', () => {
+		const cover = aCover()
+		cover.setText('title', 'Nuestro viaje a Cuenca')
+
+		cover.translateTexts({
+			title: 'My favorite destination',
+			dateLine: 'November 2026',
+		})
+
+		expect(cover.title?.text).toBe('Nuestro viaje a Cuenca')
+		expect(cover.dateLine?.text).toBe('November 2026')
+	})
+})

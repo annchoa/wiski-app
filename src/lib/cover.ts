@@ -44,6 +44,8 @@ export interface TextStyle {
 
 export interface CoverText {
 	text: string
+	// True once the user changes the words: a new language no longer translates them.
+	edited: boolean
 	typeface: string
 	x: number
 	y: number
@@ -167,6 +169,7 @@ export function createCover(initial: {
 	const cover = reactive({
 		title: {
 			text: initial.title,
+			edited: false,
 			typeface: defaultTypeface.name,
 			x: fraction(48),
 			y: fraction(44),
@@ -177,6 +180,7 @@ export function createCover(initial: {
 		} as CoverText | null,
 		dateLine: {
 			text: initial.dateLine,
+			edited: false,
 			typeface: defaultTypeface.name,
 			x: fraction(48),
 			y: fraction(148),
@@ -271,7 +275,16 @@ export function createCover(initial: {
 		setText(id: 'title' | 'dateLine', text: string) {
 			// An empty text would collapse to no height and could not be selected again.
 			const element = cover[id]
-			if (element && text.trim() !== '') element.text = text
+			if (element && text.trim() !== '') {
+				element.text = text
+				element.edited = true
+			}
+		},
+
+		translateTexts(texts: { title: string; dateLine: string }) {
+			if (cover.title && !cover.title.edited) cover.title.text = texts.title
+			if (cover.dateLine && !cover.dateLine.edited)
+				cover.dateLine.text = texts.dateLine
 		},
 
 		setTextHeight(id: 'title' | 'dateLine', height: number) {
