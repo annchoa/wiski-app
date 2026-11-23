@@ -22,6 +22,7 @@ Contraste (WCAG):
 ### Secondary sobre el verde y en links
 
 - En la barra superior verde, Secondary va al 100 %, sin opacidad ni estados propios (2026-11-23).
+- El logo `logo-secondary.png` (copia del de `wiski-landing`) va en la barra superior, a la izquierda del selector de producto (2026-11-23). Referencia: board `Worksheet / brand ejemplo logo`.
 - Los links de texto (por ejemplo, «Política de privacidad» en un footer) usan el 80 %: reposo `text-secondary/80`, hover y active `text-secondary`. El footer aún no existe ni tiene diseño.
 - Los botones Secondary sobre blanco usan el hover y el active de `color-mix` de la tabla.
 - El 70 % se descartó: casi se funde con el verde. Hex sobre `#4b8344` (aproximación): 80 % = `#cdd1bf`, 70 % = `#bdc8b0`.
@@ -51,6 +52,7 @@ No cambia:
 
 - [x] `main.css` define los cuatro tokens con los valores de la tabla.
 - [x] La barra superior usa Secondary al 100 %.
+- [x] La barra superior muestra el logo secondary a la izquierda del selector de producto.
 - [ ] Los links de texto usan el 80 % y pasan a 100 % con hover (cuando exista el footer).
 - [ ] Los botones primarios, el estado seleccionado y el foco usan Primary, con su hover y su active.
 - [x] El proyecto `wiski` de Penpot tiene ocho estilos de color en la carpeta `brand` (2026-11-13): `primary`, `-hover`, `-active`, `-foreground` y los mismos de `secondary`. Penpot no calcula `color-mix`: hover y active son hex aproximados sobre blanco.
