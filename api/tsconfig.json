@@ -1,0 +1,16 @@
+{
+	"extends": "@tsconfig/node24/tsconfig.json",
+	"include": ["src/**/*"],
+	"compilerOptions": {
+		"module": "preserve",
+		"moduleResolution": "bundler",
+		"types": ["bun"],
+		"noEmit": true,
+		"noUncheckedIndexedAccess": true,
+
+		// TypeORM reads column types from decorators.
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"strictPropertyInitialization": false
+	}
+}
