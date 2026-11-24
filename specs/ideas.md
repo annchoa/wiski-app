@@ -30,7 +30,7 @@ Cuando una idea se convierte en spec, crea `specs/<nombre>.md` y quita la idea d
 
 ## Backend
 
-- Usar SQLite.
+- Usar PostgreSQL con TypeORM, con Express, en `api/` del mismo repo.
 - Compilar con Bun.
 - Procesar las Photos en el backend antes de guardarlas, con ImageMagick. La Resolution debe ser correcta para imprimir.
 - Gestión de una Photo: esperar a tener el problema para mejorarlo.

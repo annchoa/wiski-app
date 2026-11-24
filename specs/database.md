@@ -2,13 +2,28 @@
 
 ## Status
 
-Approved by the user on 2026-11-24. The grilling session of the same day settled every decision below. Nothing is implemented yet.
+Approved by the user on 2026-11-24. The grilling session of the same day settled every decision below. On the same day the user chose PostgreSQL with TypeORM instead of SQLite. The backend scaffold exists in `api/`. No entity is implemented yet.
 
 ## Goal
 
 The backend keeps the work of one user in a relational database. There are no accounts. The URL holds the Session id. Any device that opens the URL edits the same photobook, for example a phone and a computer.
 
-The database is SQLite (see [ideas.md](ideas.md), Backend). Turn on `PRAGMA foreign_keys = ON` for every connection.
+The database is PostgreSQL, accessed through TypeORM (see [ideas.md](ideas.md), Backend). Migrations create the schema: `synchronize` stays off.
+
+### Types
+
+The tables below use SQLite-style type names. Map them in PostgreSQL:
+
+| Spec | PostgreSQL |
+| --- | --- |
+| `INTEGER` (counters, sizes, pixels) | `integer` |
+| `INTEGER PK` | `integer generated always as identity` |
+| `INTEGER` for 0 or 1 | `boolean` |
+| `INTEGER` for Unix seconds | `timestamptz` |
+| `REAL` | `double precision` |
+| `TEXT` | `text` |
+
+PostgreSQL enforces foreign keys always. A column that holds a time keeps the name from the spec (`created_at`, `expires_at`).
 
 ## Out of scope
 
@@ -59,7 +74,7 @@ Every table except `session` has `session_id`. A Session delete removes all its 
 | Column | Type | Notes |
 | --- | --- | --- |
 | `id` | TEXT PK | The token above. |
-| `product_id` | TEXT NOT NULL | `route` or `moment`. Products live in code (`src/lib/products.ts`), not in a table. |
+| `product_id` | TEXT NOT NULL | `route` or `moment`. Products live in code (`app/src/lib/products.ts`), not in a table. |
 | `version` | INTEGER NOT NULL DEFAULT 0 | See Version. |
 | `status` | TEXT NOT NULL DEFAULT `editing` | `editing` or `locked`. |
 | `created_at` | INTEGER NOT NULL | Unix seconds. |
@@ -153,7 +168,7 @@ The Title and the Date line. Two rows at most. A Text template can create a miss
 | `strikethrough` | INTEGER NOT NULL | 0 or 1. |
 | `alignment` | TEXT NOT NULL | `left`, `center` or `right`. |
 
-Primary key: (`session_id`, `kind`). The columns follow `CoverText` in `src/lib/cover.ts`.
+Primary key: (`session_id`, `kind`). The columns follow `CoverText` in `app/src/lib/cover.ts`.
 
 ### cover_illustration
 
