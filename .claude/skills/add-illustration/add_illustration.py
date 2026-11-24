@@ -16,8 +16,8 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[3]
-OUTPUT = ROOT / "public" / "illustrations"
-CREDITS = ROOT / "src" / "data" / "illustration-credits.json"
+OUTPUT = ROOT / "app" / "public" / "illustrations"
+CREDITS = ROOT / "app" / "src" / "data" / "illustration-credits.json"
 LINK = re.compile(r'<a href="([^"]+)">([^<]+)</a>')
 
 
