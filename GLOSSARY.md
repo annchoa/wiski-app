@@ -144,3 +144,15 @@ _Avoid_: Justification
 **Language selector**:
 The control at the right end of the top bar that switches the language of the interface between Spanish and English. It shows the code of the current language: ES or EN. It looks the same on the Home and in the editor. In the editor it stays in the same place with and without Cover editing.
 _Avoid_: Language switch, language picker
+
+**Session**:
+One photobook in progress. Its id is in the URL, so the user can continue it on another device. There are no accounts.
+_Avoid_: Project, draft, account
+
+**Order**:
+The purchase of the photobook of a Session. It holds the contact data of the user. A Session has one Order.
+_Avoid_: Purchase
+
+**Print PDF**:
+The PDF of the photobook at print quality. The backend builds it when the Order is paid. It is not the Quick preview.
+_Avoid_: Final PDF
