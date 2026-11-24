@@ -17,16 +17,28 @@ This exposes the app at http://localhost:5173 with hot-reload. The code is bind-
 To run one-off commands inside the container (with the service already up):
 
 ```sh
-docker compose exec dev bun run test:unit
-docker compose exec dev bun run type-check
-docker compose exec dev bun run check   # biome lint + format
+docker compose exec app bun run test:unit
+docker compose exec app bun run type-check
+docker compose exec app bun run check   # biome lint + format
 ```
 
 To install a new dependency:
 
 ```sh
-docker compose exec dev bun add <package>
+docker compose exec app bun add <package>
 docker compose build   # to pin it in the image
+```
+
+## Backend
+
+The backend lives in `api/`; the frontend lives in `app/`.
+
+TypeScript + TypeORM + PostgreSQL, in `api/`. Copy `.env.example` to `.env`, then:
+
+```sh
+docker compose up api   # Express API on http://localhost:3000/health, Postgres on 5432
+make migrate            # run pending migrations
+docker compose run --rm api bun run migration:generate src/migrations/<Name>
 ```
 
 ## Type-checking and Bun
@@ -36,7 +48,7 @@ docker compose build   # to pin it in the image
 ## UI components (shadcn-vue)
 
 ```sh
-docker compose exec dev bunx --bun shadcn-vue@latest add <component>
+docker compose exec app bunx --bun shadcn-vue@latest add <component>
 ```
 
 `--bun` is required: the CLI's `undici` needs a newer Node than the one in the image (20), so without it the command crashes on `zstd`.

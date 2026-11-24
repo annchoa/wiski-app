@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+The repo has two projects: `app/` (Vue frontend) and `api/` (Express backend). `.claude/`, `specs/`, `GLOSSARY.md`, this file, the README, `docker-compose.yml` and the `Makefile` are shared at the root. A path starting with `src/`, `scripts/` or `public/` in this file, in `specs/` and in `GLOSSARY.md` is relative to `app/`; an `api/` path says so.
+
 ## Design source
 
 Before building or changing UI, read the Penpot project `wiski` through the Penpot MCP tools; [README.md](README.md#design) has its id.
@@ -29,11 +31,11 @@ Styling has no tests: compare the running UI against Penpot. With `make up` runn
 
 - A Penpot `Spacer` between flex children adds its width to the `gap` on both sides. In Tailwind, use margin = spacer width + one `gap` (spacer 40 + `gap-6` → `mr-16`). Compare each child's `parentX` in Penpot with the DOM `x`: a screenshot hides a 24 px error.
 
-Screenshots cannot show drags, hover states or the file picker. [scripts/](scripts/) drives the headless Chrome over CDP from the host's Node (≥ 22, built-in `WebSocket`): `cdp.mjs` launches it and presses, moves and drops the mouse, `fixtures.mjs` uploads test photos, and `drag-to-trash.mjs` is a runnable example (`node scripts/drag-to-trash.mjs`, with `make up` running). Detect the file picker with `Page.setInterceptFileChooserDialog` through `browser.send`.
+Screenshots cannot show drags, hover states or the file picker. [app/scripts/](app/scripts/) drives the headless Chrome over CDP from the host's Node (≥ 22, built-in `WebSocket`): `cdp.mjs` launches it and presses, moves and drops the mouse, `fixtures.mjs` uploads test photos, and `drag-to-trash.mjs` is a runnable example (`node scripts/drag-to-trash.mjs`, with `make up` running). Detect the file picker with `Page.setInterceptFileChooserDialog` through `browser.send`.
 
 After `bun add` or `bun remove`, Vite re-optimizes on the first page load and reloads it mid-script: open the page once and wait before running a script, or its first query returns `undefined`. A failed script leaves its Chrome running on port 9333: close it with `pkill -f "[w]iski-cdp-profile"` (the brackets stop `pkill` from matching its own shell).
 
-Tests cannot judge how a PDF looks. Build a sample from a throwaway `.ts` file with `docker compose run --rm dev bun run <file>`, render it on the host with `pdftoppm -png -r 45 <file>.pdf <name>` and read the PNG. Delete the throwaway file afterwards.
+Tests cannot judge how a PDF looks. Build a sample from a throwaway `.ts` file with `docker compose run --rm app bun run <file>`, render it on the host with `pdftoppm -png -r 45 <file>.pdf <name>` and read the PNG. Delete the throwaway file afterwards.
 
 ## Drag and drop gotchas (`@vue-dnd-kit/core`)
 
@@ -50,7 +52,7 @@ Tests cannot judge how a PDF looks. Build a sample from a throwaway `.ts` file w
 - While a text is selected, the Typeface tiles repeat its words: `getByText` finds two elements. Scope the query to the Cover preview with `within(screen.getByRole('group', { name: 'Vista previa de la portada' }))` (`inPreview()` in `coverEditing.spec.ts`).
 - Real drags cannot be simulated in happy-dom: check them in Chrome (see Visual check).
 - happy-dom has no layout: `useElementSize` reads `NaN` or `0` and its `ResizeObserver` never reports a size. Stub `ResizeObserver` so it reports one on `observe`, as `slotSizedInPixels` does in `SlotCell.spec.ts`, and pass `box: 'border-box'` to `useElementSize` (the default content-box path turns empty padding strings into `NaN`).
-- The `dev` container runs Node 20 and `pdfjs-dist` needs Node ≥ 22.13: read a PDF in tests with `pdf-lib` (`src/__tests__/pdfContent.ts`). Keep `pdfjs-dist` behind `src/lib/renderPdf.ts` and mock that module in component tests.
+- The `app` container runs Node 20 and `pdfjs-dist` needs Node ≥ 22.13: read a PDF in tests with `pdf-lib` (`src/__tests__/pdfContent.ts`). Keep `pdfjs-dist` behind `src/lib/renderPdf.ts` and mock that module in component tests.
 
 ## Specs
 
@@ -62,7 +64,11 @@ Run `bunx biome check --write <files>` on the files you changed. On `src` it reo
 
 ## Docker only
 
-Bun is not installed on the host: run every command inside the `dev` container. The `Makefile` and [README.md](README.md) list the commands.
+Bun is not installed on the host: run every command inside the `app` or `api` container. The `Makefile` and [README.md](README.md) list the commands.
+
+## Backend
+
+`api/` is Express with TypeORM on PostgreSQL, and runs on Bun. Schema changes go through migrations, never `synchronize`; `make migrate` runs them. The `api` and `db` services read `.env` (copy `.env.example`). Each folder has its own `package.json`, `Dockerfile`, `biome.json` and `.gitignore`: Biome needs the `.gitignore` inside the folder because the container has no `.git`. Keep the two `biome.json` formatter settings in sync, and the Biome version equal in both.
 
 ## Why `type-check` uses `node` instead of `bun`
 
@@ -70,4 +76,4 @@ Bun is not installed on the host: run every command inside the `dev` container. 
 
 ## Import alias
 
-`@/` → `src/` is configured in three places that must stay in sync: `vite.config.ts`, `tsconfig.json`/`tsconfig.app.json`, and `components.json` (read by the shadcn-vue CLI).
+`@/` → `src/` is configured in three places that must stay in sync: `app/vite.config.ts`, `app/tsconfig.json`/`app/tsconfig.app.json`, and `app/components.json` (read by the shadcn-vue CLI).
